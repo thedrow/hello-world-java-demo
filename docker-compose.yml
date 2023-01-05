@@ -1,0 +1,35 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+    expose:
+      - 8080
+    networks:
+      - demo-network
+  mysql:
+    image: mysql:8.0
+    expose:
+      - 3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=helloworld
+    volumes:
+      - mysql_volume:/var/lib/mysql:rw
+    networks:
+      - demo-network
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - "./default.conf:/etc/nginx/conf.d/default.conf"
+    networks:
+      - demo-network
+
+volumes:
+  mysql_volume:
+
+networks:
+  demo-network:
+    driver: bridge
